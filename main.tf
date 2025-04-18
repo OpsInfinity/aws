@@ -115,15 +115,15 @@ resource "aws_route_table_association" "public" {
 #   route_table_id = aws_route_table.database.id
 # }
 
-# resource "aws_vpc_peering_connection" "peering" {
-#   peer_owner_id = var.account_no                     #account_no
-#   peer_vpc_id   = var.default_vpc_id                #default_vpc_id
-#   vpc_id        = aws_vpc.main.id
-#   auto_accept   = true
-#   tags = {
-#     Name = "peering-from-default-vpc-to-${var.env}-vpc"
-#   }
-# }
+resource "aws_vpc_peering_connection" "peering" {
+  peer_owner_id = var.account_no                     #account_no
+  peer_vpc_id   = var.default_vpc_id                #default_vpc_id
+  vpc_id        = aws_vpc.main.id
+  auto_accept   = true
+  tags = {
+    Name = "peering-from-default-vpc-to-${var.env}-vpc"
+  }
+}
 
 # resource "aws_route" "peer_route" {
 #     count                  = length(var.peer_cidr_blocks)
