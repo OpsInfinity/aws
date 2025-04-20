@@ -81,12 +81,14 @@ This section provides a generic guide to creating an Amazon EKS cluster and its 
     - Restrict access to the `cluster-autoscaler` service account.
 
 ### 9. Create IAM Policy for Cluster Autoscaler
+[**Code**](#9-create-iam-policy-for-cluster-autoscaler-1)
 - **Resource**: `aws_iam_policy`
 - **Key Requirements**:
     - Grant permissions for managing Auto Scaling Groups, EC2 instances, and EKS node groups.
     - Allow scaling and instance termination actions.
 
 ### 10. Attach Autoscaler Policy to Role
+[**Code**](#10-attach-autoscaler-policy-to-role-1)
 - **Resource**: `aws_iam_role_policy_attachment`
 - **Key Requirements**:
     - Attach the autoscaler policy to the IAM role created for the cluster autoscaler.
@@ -268,18 +270,19 @@ resource "aws_iam_role" "eks-cluster-autoscale" {
         Name = "eks-cluster-autoscale"
     }
 }
-
-resource "aws_iam_policy" "cluster-autoscale" {
-    name        = "cluster-autoscale"
-    path        = "/"
-    description = "cluster-autoscale"
+```
+### 9. Create IAM Policy for Cluster Autoscaler
+```hcl
+resource "aws_iam_policy" "cluster-autoscaler-policy" {
+    name        = "cluster-autoscaler-policy"
+    description = "IAM policy for the cluster-autoscaler"
 
     policy = jsonencode({
-        "Version" : "2012-10-17",
-        "Statement" : [
+        "Version": "2012-10-17",
+        "Statement": [
             {
-                "Effect" : "Allow",
-                "Action" : [
+                "Effect": "Allow",
+                "Action": [
                     "autoscaling:DescribeAutoScalingGroups",
                     "autoscaling:DescribeAutoScalingInstances",
                     "autoscaling:DescribeLaunchConfigurations",
@@ -291,22 +294,25 @@ resource "aws_iam_policy" "cluster-autoscale" {
                     "ec2:GetInstanceTypesFromInstanceRequirements",
                     "eks:DescribeNodegroup"
                 ],
-                "Resource" : ["*"]
+                "Resource": ["*"]
             },
             {
-                "Effect" : "Allow",
-                "Action" : [
+                "Effect": "Allow",
+                "Action": [
                     "autoscaling:SetDesiredCapacity",
                     "autoscaling:TerminateInstanceInAutoScalingGroup"
                 ],
-                "Resource" : ["*"]
+                "Resource": ["*"]
             }
         ]
     })
 }
+```
 
-resource "aws_iam_role_policy_attachment" "cluster-autoscale" {
-    policy_arn = aws_iam_policy.cluster-autoscale.arn
+### 10. Attach Autoscaler Policy to Role
+```hcl
+resource "aws_iam_role_policy_attachment" "autoscaler-policy-attachment" {
+    policy_arn = aws_iam_policy.cluster-autoscaler-policy.arn
     role       = aws_iam_role.eks-cluster-autoscale.name
 }
 ```
