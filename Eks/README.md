@@ -1,15 +1,18 @@
+# EKS 
+
 | Step | Description |
 |------|-------------|
-| 1    | Create an EKS Cluster |
-| 2    | Create IAM Role for the EKS Cluster |
-| 3    | Create a Node Group |
-| 4    | Create IAM Role for Worker Nodes |
-| 5    | Add VPC CNI Add-On |
-| 6    | Configure OIDC Provider |
-| 7    | Configure Identity Provider |
-| 8    | Create IAM Role for Cluster Autoscaler |
-| 9    | Create IAM Policy for Cluster Autoscaler |
-| 10   | Attach Autoscaler Policy to Role |
+| 1    | [Create an EKS Cluster](#1-create-an-eks-cluster) |
+| 2    | [Create IAM Role for the EKS Cluster](#2-create-iam-role-for-the-eks-cluster) |
+| 3    | [Create a Node Group](#3-create-a-node-group) |
+| 4    | [Create IAM Role for Worker Nodes](#4-create-iam-role-for-worker-nodes) |
+| 5    | [Add VPC CNI Add-On](#5-add-vpc-cni-add-on) |
+| 6    | [Configure OIDC Provider](#6-configure-oidc-provider) |
+| 7    | [Configure Identity Provider](#7-configure-identity-provider) |
+| 8    | [Create IAM Role for Cluster Autoscaler](#8-create-iam-role-for-cluster-autoscaler) |
+| 9    | [Create IAM Policy for Cluster Autoscaler](#8-create-iam-role-and-policy-for-cluster-autoscaler) |
+| 10   | [Attach Autoscaler Policy to Role](#8-create-iam-role-and-policy-for-cluster-autoscaler) |
+
 
 # Documentation for EKS Cluster Setup
 
@@ -17,7 +20,8 @@ This section provides a generic guide to creating an Amazon EKS cluster and its 
 
 ## Steps to Set Up an EKS Cluster
 
-### 1. Create an EKS Cluster
+### 1. Create an EKS Cluster 
+[**Code**](#1-create-an-eks-cluster-1)
 - **Resource**: `aws_eks_cluster`
 - **Key Requirements**:
     - Define a unique cluster name.
@@ -27,12 +31,14 @@ This section provides a generic guide to creating an Amazon EKS cluster and its 
     - Specify the Kubernetes version.
 
 ### 2. Create IAM Role for the EKS Cluster
+[**Code**](#2-create-iam-role-for-the-eks-cluster-1)
 - **Resource**: `aws_iam_role`
 - **Key Requirements**:
     - Define a policy document allowing EKS to assume the role.
     - Attach managed policies such as `AmazonEKSClusterPolicy` and `AmazonEKSVPCResourceController`.
 
 ### 3. Create a Node Group
+[**Code**](#3-create-a-node-group-1)
 - **Resource**: `aws_eks_node_group`
 - **Key Requirements**:
     - Specify the cluster name and node group name.
@@ -41,29 +47,34 @@ This section provides a generic guide to creating an Amazon EKS cluster and its 
     - Configure scaling parameters (desired, max, and min sizes).
 
 ### 4. Create IAM Role for Worker Nodes
+[**Code**](#4-create-iam-role-for-worker-nodes-1)
 - **Resource**: `aws_iam_role`
 - **Key Requirements**:
     - Define a policy document allowing EC2 instances to assume the role.
     - Attach managed policies such as `AmazonEKSWorkerNodePolicy`, `AmazonEKS_CNI_Policy`, and `AmazonEC2ContainerRegistryReadOnly`.
 
 ### 5. Add VPC CNI Add-On
+[**Code**](#5-add-vpc-cni-add-on-1)
 - **Resource**: `aws_eks_addon`
 - **Key Requirements**:
     - Specify the cluster name.
     - Enable network policies if required.
 
 ### 6. Configure OIDC Provider
+[**Code**](#6-configure-oidc-provider-1)
 - **Resources**:
     - Use an external program to fetch the OIDC thumbprint.
     - Configure the OIDC provider using the cluster's issuer URL and thumbprint.
 
 ### 7. Configure Identity Provider
+[**Code**](#7-configure-identity-provider-1)
 - **Resource**: `aws_eks_identity_provider_config`
 - **Key Requirements**:
     - Use the OIDC client ID and issuer URL.
     - Define a unique identity provider configuration name.
 
 ### 8. Create IAM Role for Cluster Autoscaler
+[**Code**](#8-create-iam-role-and-policy-for-cluster-autoscaler)
 - **Resource**: `aws_iam_role`
 - **Key Requirements**:
     - Define a policy document allowing Web Identity-based role assumption.
@@ -81,7 +92,7 @@ This section provides a generic guide to creating an Amazon EKS cluster and its 
     - Attach the autoscaler policy to the IAM role created for the cluster autoscaler.
 
 This generic guide can be adapted to create new configurations by modifying the resource names, parameters, and policies as needed.
----
+
 
 
 ### 1. Create an EKS Cluster
