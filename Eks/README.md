@@ -1,3 +1,16 @@
+| Step | Description |
+|------|-------------|
+| 1    | Create an EKS Cluster |
+| 2    | Create IAM Role for the EKS Cluster |
+| 3    | Create a Node Group |
+| 4    | Create IAM Role for Worker Nodes |
+| 5    | Add VPC CNI Add-On |
+| 6    | Configure OIDC Provider |
+| 7    | Configure Identity Provider |
+| 8    | Create IAM Role for Cluster Autoscaler |
+| 9    | Create IAM Policy for Cluster Autoscaler |
+| 10   | Attach Autoscaler Policy to Role |
+
 # Documentation for EKS Cluster Setup
 
 This section provides a generic guide to creating an Amazon EKS cluster and its associated resources.
