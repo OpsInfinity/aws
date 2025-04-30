@@ -1,5 +1,5 @@
 resource "aws_vpc" "main" {
-  cidr_block       = var.vpc_cidr
+  cidr_block = var.vpc_cidr
 
   tags = {
     Name = "${var.env}-${var.project-name}-vpc"
@@ -12,8 +12,8 @@ resource "aws_subnet" "public_subnets" {
   cidr_block        = var.public_subnet_cidrs[count.index]
   availability_zone = var.azs[count.index]
   tags = {
-    Name            = "${var.env}-${var.project-name}-public-subnet-${count.index + 1}"    
-    }
+    Name = "${var.env}-${var.project-name}-public-subnet-${count.index + 1}"
+  }
 }
 
 resource "aws_subnet" "private_subnets" {
@@ -22,8 +22,8 @@ resource "aws_subnet" "private_subnets" {
   cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = var.azs[count.index]
   tags = {
-    Name            = "${var.env}-${var.project-name}-private-subnet-${count.index + 1}"    
-    }
+    Name = "${var.env}-${var.project-name}-private-subnet-${count.index + 1}"
+  }
 }
 
 resource "aws_subnet" "database_subnets" {
@@ -32,8 +32,8 @@ resource "aws_subnet" "database_subnets" {
   cidr_block        = var.database_subnet_cidrs[count.index]
   availability_zone = var.azs[count.index]
   tags = {
-    Name            = "${var.env}-${var.project-name}-database-subnet-${count.index + 1}"    
-    }
+    Name = "${var.env}-${var.project-name}-database-subnet-${count.index + 1}"
+  }
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -64,6 +64,13 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
+  # Route to allow access to the default VPC CIDR via the VPC peering connection
+  route {
+    cidr_block                = var.default_vpc_cidr
+    vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
+  }
+
+  # Route to allow internet access via the internet gateway
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
@@ -117,8 +124,8 @@ resource "aws_route_table_association" "database" {
 
 
 resource "aws_vpc_peering_connection" "peering" {
-  peer_owner_id = var.account_no                     #account_no
-  peer_vpc_id   = var.default_vpc_id                #default_vpc_id
+  peer_owner_id = var.account_no     #account_no
+  peer_vpc_id   = var.default_vpc_id #default_vpc_id
   vpc_id        = aws_vpc.main.id
   auto_accept   = true
   tags = {
